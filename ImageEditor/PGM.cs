@@ -13,6 +13,10 @@ namespace ImageEditor
         private int colorDepth;
         private string [,] pixels;
 
+        /// <summary>
+        /// Open PGM file and initialize object with provided specification and data
+        /// </summary>
+        /// <param name="filePath"></param>
         public void open(string filePath)
         {
             using (var reader=new StreamReader(filePath))
@@ -24,9 +28,11 @@ namespace ImageEditor
                     
                     var line = reader.ReadLine();
 
+                    // Ignore comments
                     if (line.StartsWith("#"))
                         continue;
 
+                    // First line have PGM file MagicNumber
                     if (1 == lineCount)
                     {
                         this.magicNumber = line;
@@ -34,12 +40,13 @@ namespace ImageEditor
                         continue;
                     }
 
+                    // Second line have PGM file MagicNumber
                     if (2 == lineCount)
                     {
-                        var columsAndRows = line.Split(null);
+                        var columnsAndRows = line.Split(null);
 
-                        int charCount = 1;
-                        foreach (var specification in columsAndRows)
+                        int numberCount = 1;
+                        foreach (var specification in columnsAndRows)
                         {
                             if (specification.Equals(' ') || specification.Equals('\t'))
                                 continue;
@@ -47,17 +54,19 @@ namespace ImageEditor
                             if (string.IsNullOrWhiteSpace(specification))
                                 continue;
 
-                            if (1 == charCount)
+                            // First Number indicates number of columns
+                            if (1 == numberCount)
                             {
                                 this.columns = Convert.ToInt32(specification);
-                                charCount++;
+                                numberCount++;
                                 continue;
                             }
 
-                            if (2 == charCount)
+                            // Second number indicates number of rows
+                            if (2 == numberCount)
                             {
                                 this.rows = Convert.ToInt32(specification);
-                                charCount++;
+                                numberCount++;
                                 continue;
                             }
                         }
@@ -68,6 +77,7 @@ namespace ImageEditor
                         continue;
                     }
 
+                    // Line 3 indicates colorDepth
                     if (3 == lineCount)
                     {
                         var colorDepthArray = line.Split(null);
@@ -84,7 +94,7 @@ namespace ImageEditor
                         continue;
                     }
                     
-
+                    // string.Split(null) splits string by white space.
                     var pixelArray = line.Split(null);
                     int pixelCount = 0;
 
@@ -101,6 +111,11 @@ namespace ImageEditor
             }
         }
 
+        /// <summary>
+        /// Save PGM file with current state of data. File name will be pre-fixed by Unix style timestamp
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>File Name</returns>
         public string save(string fileName)
         {
             fileName = string.Format("{0}-{1}.pgm", (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds, fileName);
@@ -133,6 +148,7 @@ namespace ImageEditor
             return fileName;
         }
 
+        // create PGM image object to rotate
         private PGM createRotateImage()
         {
             var rotateImage = new PGM();
@@ -140,6 +156,7 @@ namespace ImageEditor
             rotateImage.magicNumber = this.magicNumber;
             rotateImage.colorDepth = this.colorDepth;
 
+            // rotating image will switch number of columns to number of rows and number of rows to number of columns
             rotateImage.rows = this.columns;
             rotateImage.columns = this.rows;
 
@@ -148,6 +165,7 @@ namespace ImageEditor
             return rotateImage;
         }
 
+        // creates PGM image object to flip
         private PGM createFlippedImage()
         {
             var flippedImage = new PGM();
@@ -155,6 +173,7 @@ namespace ImageEditor
             flippedImage.magicNumber = this.magicNumber;
             flippedImage.colorDepth = this.colorDepth;
 
+            // flipping image will keep number of columns and number of rows as is.
             flippedImage.rows = this.rows;
             flippedImage.columns = this.columns;
 
@@ -163,6 +182,7 @@ namespace ImageEditor
             return flippedImage;
         }
 
+        // rotate image in 90 degrees
         private PGM rotate()
         {
             var rotateImage = createRotateImage();
@@ -184,11 +204,19 @@ namespace ImageEditor
             return rotateImage;
         }
 
+        /// <summary>
+        /// Rotate image right
+        /// </summary>
+        /// <returns></returns>
         public PGM rotateRight()
         {
             return rotate();
         }
 
+        /// <summary>
+        /// Rotate image left
+        /// </summary>
+        /// <returns></returns>
         public PGM rotateLeft()
         {
             return rotate()
@@ -196,6 +224,10 @@ namespace ImageEditor
                     .rotate();
         }
 
+        /// <summary>
+        /// flip image vertically
+        /// </summary>
+        /// <returns></returns>
         public PGM flipVertical()
         {
             var flippedImage = createFlippedImage();
@@ -217,6 +249,10 @@ namespace ImageEditor
             return flippedImage;
         }
 
+        /// <summary>
+        /// Flip image horizontally
+        /// </summary>
+        /// <returns></returns>
         public PGM flipHorizontal()
         {
             var flippedImage = createFlippedImage();

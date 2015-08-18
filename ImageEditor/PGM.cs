@@ -5,19 +5,15 @@ using System.Text;
 
 namespace ImageEditor
 {
-    public class PGM
+    public class PGM:Image
     {
-        private string magicNumber;
-        private int columns;
-        private int rows;
-        private int colorDepth;
         private string [,] pixels;
 
         /// <summary>
         /// Open PGM file and initialize object with provided specification and data
         /// </summary>
         /// <param name="filePath"></param>
-        public void open(string filePath)
+        public override void open(string filePath)
         {
             using (var reader=new StreamReader(filePath))
             {
@@ -87,7 +83,7 @@ namespace ImageEditor
                             if (string.IsNullOrWhiteSpace(ccolorDepth))
                                 continue;
 
-                            this.colorDepth = Convert.ToInt32(ccolorDepth);
+                            this.depth = Convert.ToInt32(ccolorDepth);
                         }
 
                         lineCount++;
@@ -116,7 +112,7 @@ namespace ImageEditor
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>File Name</returns>
-        public string save(string fileName)
+        public override string save(string fileName)
         {
             fileName = string.Format("{0}-{1}.pgm", (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds, fileName);
 
@@ -126,7 +122,7 @@ namespace ImageEditor
             {
                 writer.WriteLine(this.magicNumber);
                 writer.WriteLine(string.Format("{0} {1}", this.columns, this.rows));
-                writer.WriteLine(this.colorDepth);
+                writer.WriteLine(this.depth);
 
                 var lineBuffer = new StringBuilder();
 
@@ -149,12 +145,12 @@ namespace ImageEditor
         }
 
         // create PGM image object to rotate
-        private PGM createRotateImage()
+        private Image createRotateImage()
         {
             var rotateImage = new PGM();
 
             rotateImage.magicNumber = this.magicNumber;
-            rotateImage.colorDepth = this.colorDepth;
+            rotateImage.depth = this.depth;
 
             // rotating image will switch number of columns to number of rows and number of rows to number of columns
             rotateImage.rows = this.columns;
@@ -166,12 +162,12 @@ namespace ImageEditor
         }
 
         // creates PGM image object to flip
-        private PGM createFlippedImage()
+        private Image createFlippedImage()
         {
             var flippedImage = new PGM();
 
             flippedImage.magicNumber = this.magicNumber;
-            flippedImage.colorDepth = this.colorDepth;
+            flippedImage.depth = this.depth;
 
             // flipping image will keep number of columns and number of rows as is.
             flippedImage.rows = this.rows;
@@ -185,7 +181,7 @@ namespace ImageEditor
         // rotate image in 90 degrees
         private PGM rotate()
         {
-            var rotateImage = createRotateImage();
+            var rotateImage = createRotateImage() as PGM;
             
             int k = 0;
             int l = 0;
@@ -208,7 +204,7 @@ namespace ImageEditor
         /// Rotate image right
         /// </summary>
         /// <returns></returns>
-        public PGM rotateRight()
+        public override Image rotateRight()
         {
             return rotate();
         }
@@ -217,7 +213,7 @@ namespace ImageEditor
         /// Rotate image left
         /// </summary>
         /// <returns></returns>
-        public PGM rotateLeft()
+        public override Image rotateLeft()
         {
             return rotate()
                     .rotate()
@@ -228,9 +224,9 @@ namespace ImageEditor
         /// flip image vertically
         /// </summary>
         /// <returns></returns>
-        public PGM flipVertical()
+        public override Image flipVertical()
         {
-            var flippedImage = createFlippedImage();
+            var flippedImage = createFlippedImage() as PGM;
 
             int k = 0;
             int l = 0;
@@ -253,9 +249,9 @@ namespace ImageEditor
         /// Flip image horizontally
         /// </summary>
         /// <returns></returns>
-        public PGM flipHorizontal()
+        public override Image flipHorizontal()
         {
-            var flippedImage = createFlippedImage();
+            var flippedImage = createFlippedImage() as PGM;
 
             int k = 0;
             int l = 0;

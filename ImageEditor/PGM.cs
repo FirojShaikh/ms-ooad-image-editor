@@ -231,9 +231,9 @@ namespace ImageEditor
             int k = 0;
             int l = 0;
 
-            for (int i = 0; i < this.rows; i++)
+            for (int i = this.rows - 1; i >= 0; i--)
             {
-                for (int j = this.columns - 1; j >= 0; j--)
+                for (int j = 0; j < this.columns; j++)
                 {
                     flippedImage.pixels[k, l] = this.pixels[i, j];
                     l++;
@@ -256,9 +256,9 @@ namespace ImageEditor
             int k = 0;
             int l = 0;
 
-            for (int i = this.rows-1; i >= 0; i--)
+            for (int i = 0; i < this.rows; i++)
             {
-                for (int j = 0; j < this.columns; j++)
+                for (int j = this.columns - 1; j >= 0; j--)
                 {
                     flippedImage.pixels[k, l] = this.pixels[i, j];
                     l++;

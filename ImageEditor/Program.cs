@@ -75,14 +75,15 @@ namespace ImageEditor
 
             ppm.open(string.Format("{0}\\{1}", ConfigurationManager.AppSettings["PPMFileDirectory"], ConfigurationManager.AppSettings["PPMSourceFile"]));
 
-            ConsoleKeyInfo cki;
+            var selectedOption = string.Empty;
             var file = string.Empty;
             do
             {
                 DisplayPPMMenu();
 
-                cki = Console.ReadKey(false);
-                switch (cki.KeyChar.ToString())
+                selectedOption = Console.ReadLine();
+
+                switch (selectedOption)
                 {
                     case "1":
                         file = ppm
@@ -112,8 +113,85 @@ namespace ImageEditor
 
                         Console.WriteLine(string.Format("{0} PPM file created by flipping horizontally.", file));
                         break;
+                    case "5":
+                        file = ppm
+                                .negateRed()
+                                .save("PPM-NegateRed");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by negating red.", file));
+                        break;
+                    case "6":
+                        file = ppm
+                                .negateGreen()
+                                .save("PPM-NegateGreen");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by negating green.", file));
+                        break;
+                    case "7":
+                        file = ppm
+                                .negateBlue()
+                                .save("PPM-NegateBlue");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by negating blue.", file));
+                        break;
+                    case "8":
+                        file = ppm
+                                .GreyScale()
+                                .save("PPM-GreyScale");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by scaling upto grey.", file));
+                        break;
+                    case "9":
+                        file = ppm
+                                .flattenRed()
+                                .save("PPM-FlattenRed");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by flatten red.", file));
+                        break;
+                    case "10":
+                        file = ppm
+                                .flattenGreen()
+                                .save("PPM-flattenGreen");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by flatten green.", file));
+                        break;
+                    case "11":
+                        file = ppm
+                                .flattenBlue()
+                                .save("PPM-FlattenBlue");
+
+                        Console.WriteLine(string.Format("{0} PPM file created by flatten blue.", file));
+                        break;
+                    case "12":
+                        file = ppm
+                                .convertToPGM()
+                                .save("PPM-To-PGM-ConvertedFile");
+
+                        Console.WriteLine(string.Format("{0} PPM file  converted into PGM file.", file));
+                        break;
+                    case "13":
+                        file = ppm
+                                .horizontalBlur()
+                                .save("PPM-HorizontalBlur");
+
+                        Console.WriteLine(string.Format("{0} PPM file  horizontally blured.", file));
+                        break;
+                    case "14":
+                        file = ppm
+                                .extremeContrast()
+                                .save("PPM-ExtremeContrast");
+
+                        Console.WriteLine(string.Format("{0} PPM file  extremely contrasted.", file));
+                        break;
+                    case "15":
+                        file = ppm
+                                .randomNoise()
+                                .save("PPM-RandomeNoise");
+
+                        Console.WriteLine(string.Format("{0} PPM file  with random noise.", file));
+                        break;
                     default:
-                        if (cki.Key == ConsoleKey.Escape)
+                        if (selectedOption == "X")
                         {
                             Console.WriteLine("\nReturning back to main menu.");
                         }
@@ -123,7 +201,7 @@ namespace ImageEditor
                         }
                         break;
                 }
-            } while (cki.Key != ConsoleKey.Escape);
+            } while (selectedOption != "X");
         }
 
         private static void ProcessMainMenu()
@@ -184,8 +262,19 @@ namespace ImageEditor
             Console.WriteLine("\t2. Rotate Left:\n");
             Console.WriteLine("\t3. Flip Vertical:\n");
             Console.WriteLine("\t4. Flip Horizontal:\n");
+            Console.WriteLine("\t5. Negate Red:\n");
+            Console.WriteLine("\t6. Negate Green:\n");
+            Console.WriteLine("\t7. Negate Blue:\n");
+            Console.WriteLine("\t8. Grey Scale:\n");
+            Console.WriteLine("\t9. Flatten Red:\n");
+            Console.WriteLine("\t10. Flatten Green:\n");
+            Console.WriteLine("\t11. Flatten Blue:\n");
+            Console.WriteLine("\t12. Convert to PGM:\n");
+            Console.WriteLine("\t13. Horizontal Blur:\n");
+            Console.WriteLine("\t14. Extreme Contrast:\n");
+            Console.WriteLine("\t15. Randome Noise:\n");
 
-            Console.WriteLine("\nPress the Escape (Esc) key to quit: \n");
+            Console.WriteLine("\nPress \"X\" to quit: \n");
         }
     }
 }

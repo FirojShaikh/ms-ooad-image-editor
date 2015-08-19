@@ -26,6 +26,22 @@ namespace ImageEditor
             return rotateImage;
         }
 
+        private Image createImage()
+        {
+            var image = new PPM();
+
+            image.magicNumber = this.magicNumber;
+            image.depth = this.depth;
+
+            // flipping image will keep number of columns and number of rows as is.
+            image.rows = this.rows;
+            image.columns = this.columns;
+
+            image.pixels = new Color[rows, columns];
+
+            return image;
+        }
+
         // creates PPM image object to flip
         private Image createFlippedImage()
         {
@@ -229,6 +245,51 @@ namespace ImageEditor
             }
         }
 
+        public Image flattenGreen()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image flattenRed()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image GreyScale()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image negateBlue()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image negateGreen()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image negateRed()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image randomNoise()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image extremeContrast()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Image horizontalBlur()
+        {
+            throw new NotImplementedException();
+        }
+
         public override Image rotateLeft()
         {
             return rotate()
@@ -271,6 +332,37 @@ namespace ImageEditor
             }
 
             return fileName;
+        }
+
+        public Image flattenBlue()
+        {
+            var flattenImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    flattenImage.pixels[i, j] = this.pixels[i, j];
+                    flattenImage.pixels[i, j].Blue = 0;
+                }
+            }
+
+            return flattenImage;
+        }
+
+        public Image convertToPGM()
+        {
+            var pgmPixels = new string[this.rows,this.columns];
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    pgmPixels[i, j] = this.pixels[i, j].GetPGMCompatibleColor().ToString();
+                }
+            }
+
+            return new PGM(this.rows, this.columns, this.depth, pgmPixels);
         }
     }
 }

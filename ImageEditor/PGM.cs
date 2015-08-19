@@ -9,6 +9,20 @@ namespace ImageEditor
     {
         private string [,] pixels;
 
+        public PGM()
+        {
+
+        }
+
+        public PGM(int rows,int columns,int depth, string[,] pixels)
+        {
+            this.magicNumber = "P2";
+            this.rows = rows;
+            this.columns = columns;
+            this.depth = depth;
+            this.pixels = pixels;
+        }
+
         /// <summary>
         /// Open PGM file and initialize object with provided specification and data
         /// </summary>

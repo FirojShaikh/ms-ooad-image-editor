@@ -409,7 +409,7 @@ namespace ImageEditor
             {
                 for (int j = 0; j < this.columns; j++)
                 {
-                    negatedImage.pixels[i, j] = new Color(255 - this.pixels[i, j].Red, this.pixels[i, j].Green, this.pixels[i, j].Blue);
+                    negatedImage.pixels[i, j] = new Color(this.depth - this.pixels[i, j].Red, this.pixels[i, j].Green, this.pixels[i, j].Blue);
                 }
             }
 
@@ -430,7 +430,7 @@ namespace ImageEditor
             {
                 for (int j = 0; j < this.columns; j++)
                 {
-                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, 255 - this.pixels[i, j].Green, this.pixels[i, j].Blue);
+                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, this.depth - this.pixels[i, j].Green, this.pixels[i, j].Blue);
                 }
             }
 
@@ -451,7 +451,7 @@ namespace ImageEditor
             {
                 for (int j = 0; j < this.columns; j++)
                 {
-                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, this.pixels[i, j].Green, 255 - this.pixels[i, j].Blue);
+                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, this.pixels[i, j].Green, this.depth - this.pixels[i, j].Blue);
                 }
             }
 

@@ -321,7 +321,18 @@ namespace ImageEditor
         /// <returns></returns>
         public Image flattenRed()
         {
-            throw new NotImplementedException();
+            var flattenImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    flattenImage.pixels[i, j] = this.pixels[i, j];
+                    flattenImage.pixels[i, j].Red = 0;
+                }
+            }
+
+            return flattenImage;
         }
 
         /// <summary>
@@ -330,7 +341,18 @@ namespace ImageEditor
         /// <returns></returns>
         public Image flattenGreen()
         {
-            throw new NotImplementedException();
+            var flattenImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    flattenImage.pixels[i, j] = this.pixels[i, j];
+                    flattenImage.pixels[i, j].Green = 0;
+                }
+            }
+
+            return flattenImage;
         }
 
         /// <summary>
@@ -359,7 +381,18 @@ namespace ImageEditor
         /// <returns></returns>
         public Image GreyScale()
         {
-            throw new NotImplementedException();
+            var newImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    int averagePixelValue = Convert.ToInt32(Math.Round((double)((this.pixels[i, j].Red + this.pixels[i, j].Green + this.pixels[i, j].Blue) / 3)));
+                    newImage.pixels[i, j] = new Color(averagePixelValue, averagePixelValue, averagePixelValue);
+                }
+            }
+
+            return newImage;
         }
 
         /// <summary>
@@ -370,7 +403,17 @@ namespace ImageEditor
         /// <returns></returns>
         public Image negateRed()
         {
-            throw new NotImplementedException();
+            var negatedImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    negatedImage.pixels[i, j] = new Color(255 - this.pixels[i, j].Red, this.pixels[i, j].Green, this.pixels[i, j].Blue);
+                }
+            }
+
+            return negatedImage;
         }
 
         /// <summary>
@@ -381,7 +424,17 @@ namespace ImageEditor
         /// <returns></returns>
         public Image negateGreen()
         {
-            throw new NotImplementedException();
+            var negatedImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, 255 - this.pixels[i, j].Green, this.pixels[i, j].Blue);
+                }
+            }
+
+            return negatedImage;
         }
 
         /// <summary>
@@ -392,7 +445,17 @@ namespace ImageEditor
         /// <returns></returns>
         public Image negateBlue()
         {
-            throw new NotImplementedException();
+            var negatedImage = createImage() as PPM;
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    negatedImage.pixels[i, j] = new Color(this.pixels[i, j].Red, this.pixels[i, j].Green, 255 - this.pixels[i, j].Blue);
+                }
+            }
+
+            return negatedImage;
         }
 
         /// <summary>

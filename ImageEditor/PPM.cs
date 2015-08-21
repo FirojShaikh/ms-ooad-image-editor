@@ -94,112 +94,124 @@ namespace ImageEditor
 
                 while (reader.Peek() >= 0)
                 {
-
-                    var line = reader.ReadLine();
-
-                    // Ignore comments
-                    if (line.StartsWith("#"))
-                        continue;
-
-                    // First line have PGM file MagicNumber
-                    if (1 == lineCount)
+                    if (lineCount < 4)
                     {
-                        this.magicNumber = line;
-                        lineCount++;
-                        continue;
-                    }
+                        var line = reader.ReadLine();
 
-                    // Second line have PGM file MagicNumber
-                    if (2 == lineCount)
-                    {
-                        var columnsAndRows = line.Split(null);
+                        // Ignore comments
+                        if (line.StartsWith("#"))
+                            continue;
 
-                        int numberCount = 1;
-                        foreach (var specification in columnsAndRows)
+                        // First line have PGM file MagicNumber
+                        if (1 == lineCount)
                         {
-                            if (specification.Equals(' ') || specification.Equals('\t'))
-                                continue;
+                            this.magicNumber = line;
+                            lineCount++;
+                            continue;
+                        }
 
-                            if (string.IsNullOrWhiteSpace(specification))
-                                continue;
+                        // Second line have PGM file MagicNumber
+                        if (2 == lineCount)
+                        {
+                            var columnsAndRows = line.Split(null);
 
-                            // First Number indicates number of columns
-                            if (1 == numberCount)
+                            int numberCount = 1;
+                            foreach (var specification in columnsAndRows)
                             {
-                                this.columns = Convert.ToInt32(specification);
-                                numberCount++;
+                                if (specification.Equals(' ') || specification.Equals('\t'))
+                                    continue;
+
+                                if (string.IsNullOrWhiteSpace(specification))
+                                    continue;
+
+                                // First Number indicates number of columns
+                                if (1 == numberCount)
+                                {
+                                    this.columns = Convert.ToInt32(specification);
+                                    numberCount++;
+                                    continue;
+                                }
+
+                                // Second number indicates number of rows
+                                if (2 == numberCount)
+                                {
+                                    this.rows = Convert.ToInt32(specification);
+                                    numberCount++;
+                                    continue;
+                                }
+                            }
+
+                            this.pixels = new Color[rows, columns];
+
+                            lineCount++;
+                            continue;
+                        }
+
+                        // Line 3 indicates colorDepth
+                        if (3 == lineCount)
+                        {
+                            var colorDepthArray = line.Split(null);
+
+                            foreach (var ccolorDepth in colorDepthArray)
+                            {
+                                if (string.IsNullOrWhiteSpace(ccolorDepth))
+                                    continue;
+
+                                this.depth = Convert.ToInt32(ccolorDepth);
+                            }
+
+                            lineCount++;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        var tokens = reader.ReadToEnd().Split(null);
+                        int colorCount = 0;
+
+                        int red = 0;
+                        int green = 0;
+                        int blue = 0;
+                        int i = 0;
+                        int j = 0;
+
+                        foreach (var token in tokens)
+                        {
+                            if (j == this.columns)
+                            {
+                                i++;
+                                j = 0;
+                            }
+
+                            if (string.IsNullOrWhiteSpace(token))
+                                continue;
+
+                            if (colorCount == 2)
+                            {
+                                blue = Convert.ToInt32(token);
+                                this.pixels[i, j++] = new Color(red, green, blue);
+                                red = 0;
+                                green = 0;
+                                blue = 0;
+
+                                colorCount = 0;
+
                                 continue;
                             }
 
-                            // Second number indicates number of rows
-                            if (2 == numberCount)
+                            if (colorCount == 1)
                             {
-                                this.rows = Convert.ToInt32(specification);
-                                numberCount++;
+                                green = Convert.ToInt32(token);
+                                colorCount++;
                                 continue;
                             }
-                        }
 
-                        this.pixels = new Color[rows, columns];
-
-                        lineCount++;
-                        continue;
-                    }
-
-                    // Line 3 indicates colorDepth
-                    if (3 == lineCount)
-                    {
-                        var colorDepthArray = line.Split(null);
-
-                        foreach (var ccolorDepth in colorDepthArray)
-                        {
-                            if (string.IsNullOrWhiteSpace(ccolorDepth))
+                            if (colorCount == 0)
+                            {
+                                red = Convert.ToInt32(token);
+                                colorCount++;
                                 continue;
-
-                            this.depth = Convert.ToInt32(ccolorDepth);
-                        }
-
-                        lineCount++;
-                        continue;
-                    }
-
-                    // string.Split(null) splits string by white space.
-                    var colorArray = line.Split(null);
-                    int pixelCount = 0;
-                    int colorCount = 0;
-                    int red = 0;
-                    int green = 0;
-                    int blue = 0;
-                    foreach (var color in colorArray)
-                    {
-                        if (string.IsNullOrWhiteSpace(color))
-                            continue;
-
-                        if (colorCount == 2)
-                        {
-                            blue = Convert.ToInt32(color);
-                            this.pixels[lineCount - 4, pixelCount++] = new Color(red, green, blue);
-                            red = 0;
-                            green = 0;
-                            blue = 0;
-
-                            colorCount = 0;
-
-                            continue;
-                        }
-
-                        if (colorCount == 1)
-                        {
-                            green = Convert.ToInt32(color);
-                            colorCount++;
-                            continue;
-                        }
-
-                        if (colorCount == 0)
-                        {
-                            red = Convert.ToInt32(color);
-                            colorCount++;
-                            continue;
+                            }
                         }
                     }
 
